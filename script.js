@@ -1,27 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bisola Kayode's Weather App</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; background-color: #f4f4f4; }
-        input, button { padding: 10px; margin: 10px; }
-        .dark-mode { background-color: #333; color: white; }
-    </style>
-</head>
-<body>
-    <h1>Bisola Kayode's Weather App ☀️</h1>
-    <p>Welcome! Check the weather in any city 🌍</p>
-    <input type="text" id="city" placeholder="Enter city name" />
-    <button onclick="getWeather()">Get Weather</button>
-    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
-    <h2 id="weather"></h2>
+async function getWeather() {
+    const city = document.getElementById('city').value || "Lagos";
+    const apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeather API key
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
-    <script src="script.js"></script>
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.cod === 200) {
+            document.getElementById('weather').innerText = 
+                `🌡️ Temperature in ${city}: ${data.main.temp}°C
+                🌤️ Weather: ${data.weather[0].description}
+                💨 Wind Speed: ${data.wind.speed} m/s
+                💧 Humidity: ${data.main.humidity}%`;
+        } else {
+            document.getElementById('weather').innerText = '⚠️ City not found! Please try again.';
+        }
+    } catch (error) {
+        document.getElementById('weather').innerText = '❌ Error fetching weather data. Check your connection!';
+    }
+}
 
-    <footer>
-        <p>Created by <strong>Bisola Kayode</strong> | <a href="https://github.com/BissyKay" target="_blank">GitHub</a></p>
-    </footer>
-</body>
-</html>
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    const mode = document.body.classList.contains("dark-mode") ? "Dark" : "Light";
+    alert(`🌙 Switched to ${mode} Mode!`);
+}
